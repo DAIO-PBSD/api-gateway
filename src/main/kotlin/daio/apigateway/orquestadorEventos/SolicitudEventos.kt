@@ -14,7 +14,9 @@ class SolicitudEventos {
     private val restTemplate: RestTemplate = RestTemplate()
     val mapper: ObjectMapper = ObjectMapper()
 
-    private val diagnosticURI = "http://localhost:8080/events"
+    // private val sourcesURI = "http://localhost:8081/"
+    private val diagnosticURI = "http://ec2-3-17-180-185.us-east-2.compute.amazonaws.com:8080/events"
+    private val attentionURI = "http://ec2-18-222-66-140.us-east-2.compute.amazonaws.com:8080/events"
 
     fun getPatientSigns(patientId: String): List<Sign>? {
         return this.restTemplate.getForEntity(URI("$diagnosticURI/patients/$patientId/signs"), List::class.java).body?.map { mapper.convertValue(it, Sign::class.java) }
@@ -25,5 +27,13 @@ class SolicitudEventos {
         headers.contentType = MediaType.APPLICATION_JSON
         val requestEntity = HttpEntity(sign, headers)
         restTemplate.put(URI("$diagnosticURI/patients/${patientID}/signs/${sign.name}"), requestEntity)
+    }
+
+    fun raiseAlarm (patientID: String) {
+        this.restTemplate.getForEntity(URI("$attentionURI/patients/$patientID/raise-alarm/XXXXXXX-XXXXXXX"), Boolean::class.java)
+    }
+
+    fun getSourcePage() {
+        // return restTemplate.clientHt
     }
 }

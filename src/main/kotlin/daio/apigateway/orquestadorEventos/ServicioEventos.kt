@@ -18,20 +18,19 @@ class ServicioEventos (private val template: SimpMessagingTemplate): Application
         this.orqEventos = context.getBean(OrqEventos::class.java)
     }
 
-    @PostMapping("/reads")
-    fun postRead(@RequestBody read: Read) {
-        println("Propagando read $read")
-        this.orqEventos.propagateRead(read.patientID, read)
+    @PostMapping("/patients/{patient_id}/reads/normal")
+    fun postNormalRead(@PathVariable patient_id: String, @RequestBody read: Read) {
+        this.orqEventos.normalRead(patient_id, read)
     }
 
-    @PostMapping("/reads/warning")
-    fun postWarningRead(@RequestBody read: Read) {
-        println("warning")
+    @PostMapping("/patients/{patient_id}/reads/warning")
+    fun postWarningRead(@PathVariable patient_id: String, @RequestBody read: Read) {
+        this.orqEventos.warningRead(patient_id, read)
     }
 
-    @PostMapping("/reads/danger")
-    fun postDangerRead(@RequestBody read: Read) {
-        println("danger")
+    @PostMapping("/patients/{patient_id}/reads/danger")
+    fun postDangerRead(@PathVariable patient_id: String, @RequestBody read: Read) {
+        this.orqEventos.dangerousRead(patient_id, read)
     }
 
     @PostMapping("/patients/{patient_id}/signs/{sign_name}")

@@ -19,20 +19,22 @@ class ServicioUsuarios: ApplicationContextAware {
 
     @GetMapping("/patients/{patient_id}/signs")
     fun getPatientSigns (@PathVariable patient_id: String): List<Sign>? {
-        val list = orqEventos.getPatientSigns(patient_id)
-        println(list)
-        return list
+        return orqEventos.getPatientSigns(patient_id)
     }
 
     @PutMapping("/patients/{patient_id}/signs/{sign_name}")
     fun putPatientSign(@PathVariable patient_id: String, @PathVariable sign_name: String, @RequestBody sign: Sign) {
-        println(sign)
         sign.name = sign_name
         sign.sanitize()
         if (!sign.isValid())
             return
-        println("pasa")
+
         orqEventos.putPatientSign(patient_id, sign)
+    }
+
+    @GetMapping
+    fun getSourceQuery () {
+        return this.orqEventos.getSourcePage()
     }
 
 }

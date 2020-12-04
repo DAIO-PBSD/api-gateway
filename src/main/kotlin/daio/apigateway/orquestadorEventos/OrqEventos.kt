@@ -5,8 +5,6 @@ import daio.diagnosticmicroservice.model.Read
 import daio.diagnosticmicroservice.model.Sign
 import org.springframework.context.ApplicationContext
 import org.springframework.context.ApplicationContextAware
-import org.springframework.web.client.RestTemplate
-import java.util.concurrent.LinkedBlockingQueue
 
 
 class OrqEventos: ApplicationContextAware {
@@ -33,5 +31,26 @@ class OrqEventos: ApplicationContextAware {
 
     fun propagateRead(patientId: String, read: Read) {
         this.enviadoMensajes.propagateRead(patientId, read)
+    }
+
+    fun normalRead(patientId: String, read: Read) {
+        this.propagateRead(patientId, read)
+    }
+
+    fun getSourcePage() {
+        return this.solicitudEventos.getSourcePage()
+    }
+
+    fun raiseAlarm(patientID: String) {
+        this.solicitudEventos.raiseAlarm(patientID)
+    }
+
+    fun warningRead(patientId: String, read: Read) {
+        this.propagateRead(patientId, read)
+    }
+
+    fun dangerousRead(patientId: String, read: Read) {
+        this.propagateRead(patientId, read)
+        raiseAlarm(patientId)
     }
 }
