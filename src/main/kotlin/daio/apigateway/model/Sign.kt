@@ -1,13 +1,22 @@
-package daio.apigateway.model
+package daio.diagnosticmicroservice.model
 
-import java.time.LocalDateTime
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties
 
+@JsonIgnoreProperties(ignoreUnknown = true)
 class Sign (
-    var type: String,
-    var timeEmitted: LocalDateTime,
-    var patient: String,
-    var danger: Int, // 0 -> none, 1 -> moderate, 2 -> high
-    var value: Double
+        var name: String = "",
+        var extremeLow: Double = 0.0,
+        var low: Double = 0.0,
+        var high: Double = 0.0,
+        var extremeHigh: Double = 0.0
 ) {
-    override fun toString() = "$patient: [$type] $value ($timeEmitted)"
+    override fun toString() = "SIGN -> $name: $extremeLow - $low - $high - $extremeHigh"
+
+    fun sanitize() {
+        name = name.trim()
+    }
+
+    fun isValid(): Boolean {
+        return name.isNotEmpty() && extremeLow < low && low < high && high < extremeHigh
+    }
 }
